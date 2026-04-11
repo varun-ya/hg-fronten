@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+  --background: 0 0% 100%;
+  --background-alt: 0 0% 99%;
+  --foreground: 240 3% 6%;
+  --eleven-sidebar-width-expanded: 16rem;
+  --eleven-sidebar-width-collapsed: 4rem;
+  --eleven-header-height: 3.125rem;
+  --eleven-banner-height: 0rem;
+  --eleven-footer-height: 0rem;
+  --eleven-player-height: 0rem;
+  --eleven-sidebar-width: 16rem;
+  --gray-50: 0 0% 98%;
+  --gray-100: 240 4.8% 95.9%;
+  --gray-200: 240 6.1% 90.4%;
+  --gray-300: 240 5.1% 84.7%;
+  --gray-400: 240 4.7% 66.7%;
+  --gray-500: 240 3.6% 48.8%;
+  --gray-600: 240 4.7% 37.5%;
+  --gray-700: 240 4.6% 30%;
+  --gray-800: 240 2.9% 20.2%;
+  --gray-900: 240 2.7% 14.5%;
+  --gray-950: 240 1.7% 11.2%;
+  --darken-50: rgba(0,0,0,0.02);
+  --darken-100: rgba(0,0,23,0.043);
+  --darken-150: rgba(0,0,29,0.075);
+  --darken-200: rgba(0,0,29,0.102);
+  --darken-300: rgba(0,0,25,0.161);
+  --darken-400: rgba(0,0,23,0.349);
+  --darken-500: rgba(0,0,17,0.529);
+  --darken-600: rgba(0,0,14,0.643);
+  --darken-700: rgba(0,0,10,0.714);
+  --darken-800: rgba(0,0,4,0.804);
+  --darken-900: rgba(0,0,2,0.859);
+  --darken-950: rgba(0,0,1,0.89);
+  --gray-alpha-50: var(--darken-50);
+  --gray-alpha-100: var(--darken-100);
+  --gray-alpha-150: var(--darken-150);
+  --gray-alpha-200: var(--darken-200);
+  --gray-alpha-300: var(--darken-300);
+  --gray-alpha-400: var(--darken-400);
+  --gray-alpha-500: var(--darken-500);
+  --gray-alpha-600: var(--darken-600);
+  --gray-alpha-700: var(--darken-700);
+  --gray-alpha-800: var(--darken-800);
+  --gray-alpha-900: var(--darken-900);
+  --gray-alpha-950: var(--darken-950);
+  --border: var(--gray-alpha-150);
+  --ring: 224 71.4% 4.1%;
+  --radius: 0.5rem;
+  --primary: 220.9 39.3% 11%;
+  --primary-foreground: 210 20% 98%;
+  --muted: 220 14.3% 95.9%;
+  --muted-foreground: 220 8.9% 46.1%;
+  --destructive: 0 84.2% 60.2%;
+  --accent: 220 14.3% 95.9%;
+  color-scheme: light;
+}
+
+/* ── Dark mode via filter invert ──
+   Works with hardcoded Tailwind colors — inverts the whole UI,
+   then re-inverts images/videos so they stay natural */
+[data-theme="dark"] body {
+  filter: invert(1) hue-rotate(180deg);
+  background: #000;
+}
+[data-theme="dark"] img,
+[data-theme="dark"] video,
+[data-theme="dark"] iframe,
+[data-theme="dark"] [style*="background-image"] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

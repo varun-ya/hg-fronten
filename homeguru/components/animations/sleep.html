@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Infinite Image Animation</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: white;
+            margin: 0;
+            gap: 10px;
+        }
+        #canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="40" height="40"></canvas>
+    <button id="playPause">Pause</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        const btn = document.getElementById('playPause');
+        const images = [];
+        const sequence = [0, 1, 2, 0, 1, 2];
+        let currentFrame = 0;
+        let intervalId;
+        let isPlaying = false;
+        
+        for (let i = 1; i <= 3; i++) {
+            const img = new Image();
+            img.src = i + '.png';
+            images.push(img);
+        }
+        
+        images[0].onload = () => {
+            intervalId = setInterval(() => {
+                ctx.clearRect(0, 0, 40, 40);
+                ctx.drawImage(images[sequence[currentFrame]], 0, 0, 40, 40);
+                currentFrame = (currentFrame + 1) % sequence.length;
+            }, 300);
+            isPlaying = true;
+        };
+        
+        btn.onclick = () => {
+            if (isPlaying) {
+                clearInterval(intervalId);
+                btn.textContent = 'Play';
+            } else {
+                intervalId = setInterval(() => {
+                    ctx.clearRect(0, 0, 40, 40);
+                    ctx.drawImage(images[sequence[currentFrame]], 0, 0, 40, 40);
+                    currentFrame = (currentFrame + 1) % sequence.length;
+                }, 200);
+                btn.textContent = 'Pause';
+            }
+            isPlaying = !isPlaying;
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+   ▲ Next.js 15.5.12
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.0.106:3001
+
+ ✓ Starting...
+ ✓ Ready in 3s
+ ○ Compiling /admin-onboarding ...
+ ✓ Compiled /admin-onboarding in 9.1s (586 modules)
+ ✓ Compiled in 1116ms (245 modules)
+ GET /admin-onboarding?source=website 200 in 4658ms
+ ○ Compiling /_error ...
+ GET /admin-onboarding?source=website 500 in 3569ms
+ GET /admin-onboarding?source=website 500 in 608ms
+ GET /admin-onboarding?source=website 200 in 1831ms
+ ✓ Compiled /_error in 7s (899 modules)

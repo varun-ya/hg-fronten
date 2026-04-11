@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sprite Strip Animation</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: white;
+            margin: 0;
+            gap: 10px;
+        }
+        #canvas {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            position: absolute;
+        }
+        #playPause {
+            position: absolute;
+            bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="40" height="40"></canvas>
+    <button id="playPause">Pause</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        const btn = document.getElementById('playPause');
+        const sprite = new Image();
+        sprite.src = 'stripe.png';
+        const sleepImages = [];
+        for (let i = 1; i <= 3; i++) {
+            const img = new Image();
+            img.src = i + '.png';
+            sleepImages.push(img);
+        }
+        const sleepSequence = [0, 1, 2, 0, 1, 2];
+        let currentFrame = 0;
+        let sleepFrame = 0;
+        let animationId;
+        let isPlaying = false;
+        let lastFrameTime = 0;
+        let frameDelay = 100;
+        let sleepFrameDelay = 300;
+        let rotation = 0;
+        let flipX = 1;
+        let canvasX = window.innerWidth / 2 - 20;
+        let canvasY = window.innerHeight / 2 - 20;
+        let targetX = canvasX;
+        let targetY = canvasY;
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let lastMouseX = mouseX;
+        let lastMouseY = mouseY;
+        let mouseSpeed = 0;
+        let isSleeping = false;
+        let isWaiting = false;
+        
+        canvas.style.left = canvasX + 'px';
+        canvas.style.top = canvasY + 'px';
+        
+        document.addEventListener('mousemove', (e) => {
+            const dx = e.clientX - lastMouseX;
+            const dy = e.clientY - lastMouseY;
+            mouseSpeed = Math.sqrt(dx * dx + dy * dy);
+            
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            targetX = mouseX - 20;
+            targetY = mouseY - 20;
+        });
+        
+        function updatePosition() {
+            const imageCenterX = canvasX + 20;
+            const imageCenterY = canvasY + 20;
+            const dx = mouseX - imageCenterX;
+            const dy = mouseY - imageCenterY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            isWaiting = mouseSpeed >= 20;
+            isSleeping = distance < 10 && !isWaiting;
+            
+            let angle = Math.atan2(dy, dx);
+            
+            if (angle > Math.PI / 2 || angle < -Math.PI / 2) {
+                flipX = -1;
+                rotation = Math.PI - angle;
+            } else {
+                flipX = 1;
+                rotation = angle;
+            }
+            
+            if (!isWaiting && !isSleeping) {
+                canvasX += (targetX - canvasX) * 0.03;
+                canvasY += (targetY - canvasY) * 0.03;
+            }
+            
+            canvas.style.left = canvasX + 'px';
+            canvas.style.top = canvasY + 'px';
+        }
+        
+        function drawFrame() {
+            ctx.save();
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, 40, 40);
+            ctx.translate(20, 20);
+            
+            if (isSleeping) {
+                ctx.drawImage(sleepImages[sleepSequence[sleepFrame]], -20, -20, 40, 40);
+            } else if (isWaiting) {
+                ctx.drawImage(sprite, currentFrame * 172, 0, 172, 172, -20, -20, 40, 40);
+            } else {
+                ctx.rotate(rotation);
+                ctx.scale(flipX, 1);
+                ctx.drawImage(sprite, currentFrame * 172, 0, 172, 172, -20, -20, 40, 40);
+            }
+            ctx.restore();
+        }
+        
+        function animate(timestamp) {
+            if (!lastFrameTime) lastFrameTime = timestamp;
+            const elapsed = timestamp - lastFrameTime;
+            
+            updatePosition();
+            drawFrame();
+            
+            const currentDelay = isSleeping ? sleepFrameDelay : frameDelay;
+            if (elapsed >= currentDelay) {
+                if (isSleeping) {
+                    sleepFrame = (sleepFrame + 1) % sleepSequence.length;
+                } else {
+                    currentFrame = (currentFrame + 1) % 6;
+                }
+                lastFrameTime = timestamp;
+            }
+            
+            if (isPlaying) {
+                animationId = requestAnimationFrame(animate);
+            }
+        }
+        
+        sprite.onload = () => {
+            isPlaying = true;
+            animationId = requestAnimationFrame(animate);
+        };
+        
+        btn.onclick = () => {
+            if (isPlaying) {
+                cancelAnimationFrame(animationId);
+                btn.textContent = 'Play';
+            } else {
+                lastFrameTime = 0;
+                animationId = requestAnimationFrame(animate);
+                btn.textContent = 'Pause';
+            }
+            isPlaying = !isPlaying;
+        };
+    </script>
+</body>
+</html>

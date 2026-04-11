@@ -1,0 +1,13 @@
+{
+  "name": "multi-app-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:all": "cd homeguru && npm run build && cd ..\\hg_teacher\\eleven-labs-dashboard && npm run build && cd ..\\..\\hg_teacher\\student-webapp && npm run build && cd ..\\..",
+    "start": "node server.js",
+    "install:all": "cd homeguru && npm install && cd ..\\hg_teacher\\eleven-labs-dashboard && npm install && cd ..\\..\\hg_teacher\\student-webapp && npm install && cd ..\\.."
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,45 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Owl Body -->
+  <ellipse cx="100" cy="120" rx="60" ry="70" fill="#F97316"/>
+  
+  <!-- Owl Head -->
+  <circle cx="100" cy="70" r="50" fill="#F97316"/>
+  
+  <!-- Ear Tufts -->
+  <path d="M 70 40 Q 65 20 75 30" fill="#EA580C"/>
+  <path d="M 130 40 Q 135 20 125 30" fill="#EA580C"/>
+  
+  <!-- Eyes Background -->
+  <circle cx="85" cy="70" r="18" fill="white"/>
+  <circle cx="115" cy="70" r="18" fill="white"/>
+  
+  <!-- Pupils -->
+  <circle cx="85" cy="72" r="10" fill="#1F2937"/>
+  <circle cx="115" cy="72" r="10" fill="#1F2937"/>
+  
+  <!-- Eye Shine -->
+  <circle cx="88" cy="68" r="4" fill="white"/>
+  <circle cx="118" cy="68" r="4" fill="white"/>
+  
+  <!-- Beak -->
+  <path d="M 100 85 L 95 95 L 105 95 Z" fill="#FCD34D"/>
+  
+  <!-- Wings -->
+  <ellipse cx="60" cy="130" rx="20" ry="35" fill="#EA580C" transform="rotate(-20 60 130)"/>
+  <ellipse cx="140" cy="130" rx="20" ry="35" fill="#EA580C" transform="rotate(20 140 130)"/>
+  
+  <!-- Belly -->
+  <ellipse cx="100" cy="135" rx="35" ry="40" fill="#FFF7F0"/>
+  
+  <!-- Feet -->
+  <ellipse cx="85" cy="185" rx="12" ry="8" fill="#FCD34D"/>
+  <ellipse cx="115" cy="185" rx="12" ry="8" fill="#FCD34D"/>
+  
+  <!-- Toes -->
+  <line x1="80" y1="185" x2="75" y2="190" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="85" y1="185" x2="85" y2="192" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="90" y1="185" x2="95" y2="190" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="110" y1="185" x2="105" y2="190" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="115" y1="185" x2="115" y2="192" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="120" y1="185" x2="125" y2="190" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+</svg>

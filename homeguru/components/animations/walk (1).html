@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Walk Animation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: white;
+            margin: 0;
+        }
+        #canvas {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="40" height="40"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        const sprite = new Image();
+        sprite.src = 'walk.png';
+        const walkSequence = [0, 1, 0, 1];
+        let walkFrameIndex = 0;
+        let lastFrameTime = 0;
+        let frameDelay = 400;
+        let canvasX = window.innerWidth / 2 - 20;
+        let canvasY = window.innerHeight / 2 - 20;
+        
+        canvas.style.left = canvasX + 'px';
+        canvas.style.top = canvasY + 'px';
+        
+        function drawFrame() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, 40, 40);
+            ctx.save();
+            ctx.translate(20, 20);
+            
+            let currentFrame = walkSequence[walkFrameIndex];
+            let flipWalk = (walkFrameIndex >= 2) ? -1 : 1;
+            ctx.scale(flipWalk, 1);
+            
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 238;
+            tempCanvas.height = 238;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(sprite, currentFrame * 238, 0, 238, 238, 0, 0, 238, 238);
+            
+            ctx.drawImage(tempCanvas, 0, 0, 238, 238, -20, -20, 40, 40);
+            
+            ctx.restore();
+        }
+        
+        function animate(timestamp) {
+            if (!lastFrameTime) lastFrameTime = timestamp;
+            const elapsed = timestamp - lastFrameTime;
+            
+            drawFrame();
+            
+            if (elapsed >= frameDelay) {
+                let isFlipped = (walkFrameIndex >= 2);
+                if (isFlipped) {
+                    canvasX -= 20;
+                } else {
+                    canvasX += 20;
+                }
+                canvas.style.left = canvasX + 'px';
+                
+                walkFrameIndex = (walkFrameIndex + 1) % walkSequence.length;
+                lastFrameTime = timestamp;
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        sprite.onload = () => {
+            requestAnimationFrame(animate);
+        };
+    </script>
+</body>
+</html>
