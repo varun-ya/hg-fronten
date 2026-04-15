@@ -1,0 +1,329 @@
+service: homeguru-backend
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  memorySize: 512
+  timeout: 30
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    USERS_TABLE: ${self:service}-users-${self:provider.stage}
+    TUTORS_TABLE: ${self:service}-tutors-${self:provider.stage}
+    STUDENTS_TABLE: ${self:service}-students-${self:provider.stage}
+    SESSIONS_TABLE: ${self:service}-sessions-${self:provider.stage}
+    BOOKINGS_TABLE: ${self:service}-bookings-${self:provider.stage}
+    MESSAGES_TABLE: ${self:service}-messages-${self:provider.stage}
+    PAYMENTS_TABLE: ${self:service}-payments-${self:provider.stage}
+    ASSIGNMENTS_TABLE: ${self:service}-assignments-${self:provider.stage}
+    NOTES_TABLE: ${self:service}-notes-${self:provider.stage}
+    JWT_SECRET: ${env:JWT_SECRET}
+    TWILIO_ACCOUNT_SID: ${env:TWILIO_ACCOUNT_SID}
+    TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
+    TWILIO_PHONE_NUMBER: ${env:TWILIO_PHONE_NUMBER}
+    EMAIL_FROM: ${env:EMAIL_FROM}
+    RAZORPAY_KEY_ID: ${env:RAZORPAY_KEY_ID}
+    RAZORPAY_KEY_SECRET: ${env:RAZORPAY_KEY_SECRET}
+  
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchGetItem
+            - dynamodb:BatchWriteItem
+          Resource:
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TUTORS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STUDENTS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.SESSIONS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BOOKINGS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.MESSAGES_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PAYMENTS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ASSIGNMENTS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.NOTES_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}/index/*"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TUTORS_TABLE}/index/*"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STUDENTS_TABLE}/index/*"
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+functions:
+  graphql:
+    handler: src/index.handler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: true
+      - http:
+          path: graphql
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: true
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.USERS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: phone
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: EmailIndex
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: PhoneIndex
+            KeySchema:
+              - AttributeName: phone
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    TutorsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.TUTORS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: UserIdIndex
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    StudentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.STUDENTS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: UserIdIndex
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    SessionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.SESSIONS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: tutorId
+            AttributeType: S
+          - AttributeName: studentId
+            AttributeType: S
+          - AttributeName: scheduledAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: TutorIdIndex
+            KeySchema:
+              - AttributeName: tutorId
+                KeyType: HASH
+              - AttributeName: scheduledAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: StudentIdIndex
+            KeySchema:
+              - AttributeName: studentId
+                KeyType: HASH
+              - AttributeName: scheduledAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    BookingsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.BOOKINGS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: studentId
+            AttributeType: S
+          - AttributeName: tutorId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: StudentIdIndex
+            KeySchema:
+              - AttributeName: studentId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: TutorIdIndex
+            KeySchema:
+              - AttributeName: tutorId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    MessagesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.MESSAGES_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: threadId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: ThreadIdIndex
+            KeySchema:
+              - AttributeName: threadId
+                KeyType: HASH
+              - AttributeName: createdAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    PaymentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.PAYMENTS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: UserIdIndex
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: createdAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    AssignmentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.ASSIGNMENTS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: studentId
+            AttributeType: S
+          - AttributeName: tutorId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: StudentIdIndex
+            KeySchema:
+              - AttributeName: studentId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: TutorIdIndex
+            KeySchema:
+              - AttributeName: tutorId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    NotesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.NOTES_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: sessionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: SessionIdIndex
+            KeySchema:
+              - AttributeName: sessionId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL

@@ -159,7 +159,7 @@ export default function WalletPage() {
       </header>
 
       {/* Content */}
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 px-5 py-6">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4 sm:gap-6 px-3 sm:px-5 py-4 sm:py-6">
 
         {/* Main column */}
         <main className="space-y-5">

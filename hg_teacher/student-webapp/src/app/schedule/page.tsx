@@ -314,7 +314,7 @@ export default function SchedulePage() {
       {rescheduleModal && (
         <>
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]" onClick={() => { setRescheduleModal(null); setRescheduleDate(null); setRescheduleSlot(null); setRescheduleNote(""); }} />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-[20px] z-[101] w-[480px] max-h-[85vh] overflow-hidden border border-[#EBEBEB]" style={{ boxShadow: '0 25px 60px -12px rgba(0,0,0,0.15)' }}>
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-[20px] z-[101] w-[95vw] max-w-[480px] max-h-[85vh] overflow-hidden border border-[#EBEBEB]" style={{ boxShadow: '0 25px 60px -12px rgba(0,0,0,0.15)' }}>
             {/* Header */}
             <div className="px-6 py-5 border-b border-[#F0F0F0]">
               <div className="flex items-center justify-between">
@@ -490,11 +490,11 @@ export default function SchedulePage() {
         </>
       )}
       
-      <header className="sticky top-0 z-40 bg-[#FAFAFA] border-b border-[#EBEBEB] px-5 py-2.5">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2.5">
-              <span className="text-[17px] font-medium text-[#111]">Schedule</span>
+      <header className="sticky top-0 z-40 bg-[#FAFAFA] border-b border-[#EBEBEB] px-3 sm:px-5 py-2.5">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[15px] sm:text-[17px] font-medium text-[#111]">Schedule</span>
             </div>
             
             <button 
@@ -502,7 +502,7 @@ export default function SchedulePage() {
                 setSelectedDate(today);
                 setViewMonth(new Date(today.getFullYear(), today.getMonth()));
               }}
-              className="ml-3 px-4 py-1.5 rounded-full border border-[#E5E7EB] text-[13px] font-medium hover:bg-white transition-all cursor-pointer bg-transparent text-[#111]"
+              className="hidden sm:block ml-1 sm:ml-3 px-4 py-1.5 rounded-full border border-[#E5E7EB] text-[13px] font-medium hover:bg-white transition-all cursor-pointer bg-transparent text-[#111] shrink-0"
             >
               Today
             </button>
@@ -522,7 +522,7 @@ export default function SchedulePage() {
               </button>
             </div>
             
-            <h2 className="text-[15px] font-medium ml-2 text-[#666] cursor-pointer hover:text-[#111] transition-colors relative" onClick={() => setShowMonthPicker(!showMonthPicker)}>
+            <h2 className="text-[13px] sm:text-[15px] font-medium ml-1 sm:ml-2 text-[#666] cursor-pointer hover:text-[#111] transition-colors relative truncate" onClick={() => setShowMonthPicker(!showMonthPicker)}>
               {formatDate(selectedDate)}
               {showMonthPicker && (
                 <>
@@ -582,7 +582,7 @@ export default function SchedulePage() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             <div className="relative">
               <button 
                 onClick={() => setShowSettingsDropdown(!showSettingsDropdown)}
@@ -609,7 +609,7 @@ export default function SchedulePage() {
               )}
             </div>
             
-            <div className="relative ml-1.5 flex items-center gap-1.5">
+            <div className="relative ml-1 sm:ml-1.5 flex items-center gap-1 sm:gap-1.5">
               <button
                 onClick={() => setShowTzDropdown(!showTzDropdown)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-white transition-colors cursor-pointer border border-[#E5E7EB] text-[13px] font-medium bg-transparent text-[#111]"
@@ -671,7 +671,7 @@ export default function SchedulePage() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 ml-2 pl-2 border-l border-[#E5E7EB]">
+            <div className="hidden sm:flex items-center gap-2 ml-2 pl-2 border-l border-[#E5E7EB]">
               <button className="p-1.5 hover:bg-white rounded-lg transition-colors cursor-pointer text-[#888] border-none bg-transparent">
                 <GridFour size={20} weight="regular" />
               </button>
@@ -684,7 +684,7 @@ export default function SchedulePage() {
       </header>
 
       {/* Main Layout Area */}
-      <div className="max-w-[1440px] mx-auto flex gap-6 px-5 py-6">
+      <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-4 sm:gap-6 px-3 sm:px-5 py-4 sm:py-6">
         
         {/* Left Sidebar */}
         <aside className="w-[280px] flex-shrink-0 flex flex-col gap-4 hidden lg:flex">
@@ -904,8 +904,8 @@ export default function SchedulePage() {
                                     </>
                                   )}
                                   
-                                  <div className="px-5 py-4 relative z-10">
-                                    <div className="flex items-center gap-4">
+                                    <div className="px-4 sm:px-5 py-4 relative z-10">
+                                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                                       {/* Avatar */}
                                       <img 
                                         src={`https://api.dicebear.com/7.x/notionists/svg?seed=${cls.student}`}
@@ -961,7 +961,7 @@ export default function SchedulePage() {
                                       
                                       {/* Actions */}
                                       {cls.status !== 'attended' && cls.status !== 'missed' && (
-                                        <div className="flex items-center gap-2 shrink-0">
+                                        <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
                                           <button 
                                             disabled={!cls.canJoin}
                                             className="bg-[#111] hover:bg-[#000] disabled:bg-[#F5F5F5] text-white disabled:text-[#BBB] text-[13px] font-semibold px-5 py-2 rounded-lg transition-all border-none cursor-pointer disabled:cursor-not-allowed"

@@ -1,7 +1,5 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
-import { Menu, X } from "lucide-react";
 
 /* ─── Colour tokens — matches Sarvam theme ─── */
 const P = {
@@ -234,7 +232,7 @@ function ConvoList({ active, setActive }: { active: string; setActive: (id: stri
   );
 
   return (
-    <div className="w-full md:w-[420px] shrink-0 flex flex-col h-full bg-white border-r border-[#E5E7EB]">
+    <div className="w-full flex flex-col h-full bg-white border-r border-[#E5E7EB]">
       
       {/* Header */}
       <div className="px-6 py-5 border-b border-[#E5E7EB]">
@@ -408,20 +406,24 @@ function ConvoList({ active, setActive }: { active: string; setActive: (id: stri
 
 /* ── PAGE LAYOUT ── */
 export default function ChatPage() {
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [messageInput, setMessageInput] = useState("");
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [conversations, setConversations] = useState<Convo[]>(CONVOS);
+  const [mobileShowChat, setMobileShowChat] = useState(false);
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    if (!isMobile && conversations.length > 0) setActiveId(conversations[0].id);
+    if (conversations.length > 0) setActiveId(conversations[0].id);
   }, []);
 
   const active = conversations.find(c => c.id === activeId) || null;
+
+  const handleSelectConvo = (id: string) => {
+    setActiveId(id);
+    setMobileShowChat(true);
+  };
 
   const handleSendMessage = () => {
     if (!messageInput.trim() || !active) return;
@@ -449,7 +451,6 @@ export default function ChatPage() {
 
     setMessageInput("");
     
-    // Simulate message being read after 2 seconds
     setTimeout(() => {
       setConversations(prev => prev.map(conv => {
         if (conv.id === activeId) {
@@ -467,83 +468,40 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-screen overflow-hidden font-matter" style={{ background: P.bg }}>
-      
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar isOpen={true} />
+
+      {/* Conversation List - always visible on desktop, toggles on mobile */}
+      <div className={`h-full shrink-0 lg:block lg:w-[380px] ${mobileShowChat ? 'hidden' : 'block w-full'}`}>
+        <ConvoList active={active?.id || ""} setActive={handleSelectConvo} />
       </div>
 
-      {/* Mobile Sidebar Overlay */}
-      {mobileSidebarOpen && (
-        <>
-          <div className="fixed inset-0 bg-black/40 z-40 md:hidden" onClick={() => setMobileSidebarOpen(false)} />
-          <div className="fixed left-0 top-0 h-full z-50 md:hidden">
-            <Sidebar isOpen={true} />
-          </div>
-        </>
-      )}
+      {/* Chat Side */}
+      <main className={`flex-1 flex flex-col h-screen overflow-hidden min-w-0 bg-white lg:block ${mobileShowChat ? 'block' : 'hidden'}`}>
 
-      {/* Main Container */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden min-w-0 bg-white">
-        
-        {/* Mobile toggle */}
-        <div className="md:hidden fixed top-4 left-4 z-30">
-          <button onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-            className="p-2 bg-white rounded-lg shadow-sm border border-[#E5E7EB]">
-            {mobileSidebarOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
-
-        {/* Global Header */}
-        <div className="px-5 md:px-7 py-3 md:py-4 mt-14 md:mt-0 shrink-0 border-b border-[#E5E7EB] bg-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button onClick={() => window.history.back()} className="p-2 hover:bg-[#F9FAFB] rounded-lg transition-colors border-none bg-transparent cursor-pointer text-[#888]">
-                <Svg d={D.back} s={20} />
-              </button>
-              <div className="flex items-center gap-2 text-[14px] text-[#888]">
-                <span className="hover:text-[#111] cursor-pointer">HomeGuru</span>
-                <span>/</span>
-                <span className="text-[#111] font-medium">Chats</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Chat Split View Layout */}
-        <div className="flex-1 flex overflow-hidden min-h-0 relative">
-           
-           {/* List Column */}
-           <div className={`h-full ${active ? 'hidden md:block' : 'block w-full md:w-auto'}`}>
-             <ConvoList active={active?.id || ""} setActive={setActiveId} />
-           </div>
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col overflow-hidden min-h-0 relative h-full">
 
            {/* Empty State */}
-           <div className={`flex-1 h-full min-w-0 ${!active ? 'hidden md:flex' : 'hidden'} flex-col items-center justify-center`}
-                style={{ background: P.bg }}>
-             <div className="text-center">
-               <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto mb-6" 
-                    style={{ border: `2px solid ${P.border}` }}>
-                 <Svg d={D.chat} s={32} className="text-[#F97316]" />
-               </div>
-               <h2 className="text-[20px] font-semibold text-[#111] mb-2">Your conversations</h2>
-               <p className="text-[14px] text-[#888]">Select a conversation to start messaging</p>
-               <div className="flex items-center gap-4 mt-6 text-[13px] text-[#999]">
-                 <span>{conversations.length} conversations</span>
-                 <span>•</span>
-                 <span>{conversations.filter(c => c.online).length} online</span>
+           {!active && (
+             <div className="flex-1 h-full min-w-0 flex flex-col items-center justify-center" style={{ background: P.bg }}>
+               <div className="text-center">
+                 <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto mb-6" style={{ border: `2px solid ${P.border}` }}>
+                   <Svg d={D.chat} s={32} className="text-[#F97316]" />
+                 </div>
+                 <h2 className="text-[20px] font-semibold text-[#111] mb-2">Your conversations</h2>
+                 <p className="text-[14px] text-[#888]">Select a conversation to start messaging</p>
                </div>
              </div>
-           </div>
+           )}
 
            {/* Chat Main - Show when active */}
            {active && (
              <div className="flex-1 h-full min-w-0 flex flex-col" style={{ background: P.bg }}>
                {/* Header */}
-               <div className="px-8 py-3.5 flex items-center justify-between shrink-0 bg-white" style={{ borderBottom: `1px solid ${P.borderLight}` }}>
+               <div className="px-4 sm:px-8 py-3.5 flex items-center justify-between shrink-0 bg-white" style={{ borderBottom: `1px solid ${P.borderLight}` }}>
                  <div className="flex items-center gap-4 min-w-0 flex-1">
-                   <button onClick={() => setActiveId(null)} className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl transition-all hover:bg-[#FAFAFA] shrink-0 border-none bg-transparent cursor-pointer" style={{ color: P.muted }}>
-                      <Svg d={D.back} s={20} />
+                   {/* Back button - mobile only */}
+                   <button onClick={() => setMobileShowChat(false)} className="lg:hidden p-2 hover:bg-[#F9FAFB] rounded-lg transition-colors border-none bg-transparent cursor-pointer text-[#888]">
+                     <Svg d={D.back} s={20} />
                    </button>
                    <div className="relative shrink-0">
                      <img 
@@ -631,7 +589,7 @@ export default function ChatPage() {
                </div>
 
                {/* Messages Area */}
-               <div className="flex-1 overflow-y-auto px-8 py-8">
+               <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 sm:py-8">
                  {/* Messages */}
                  <div className="space-y-6 max-w-[900px] mx-auto">
                    {active.messages.map((m, idx) => {
@@ -715,7 +673,7 @@ export default function ChatPage() {
                </div>
 
                {/* Input Area */}
-               <div className="bg-white shrink-0 px-8 py-6" style={{ borderTop: `1px solid ${P.borderLight}`, boxShadow: '0 -4px 12px rgba(0,0,0,0.03)' }}>
+               <div className="bg-white shrink-0 px-4 sm:px-8 py-4 sm:py-6" style={{ borderTop: `1px solid ${P.borderLight}`, boxShadow: '0 -4px 12px rgba(0,0,0,0.03)' }}>
                  <div className="flex items-center gap-3 max-w-[900px] mx-auto">
                    {/* Attach Button */}
                    <div className="relative">

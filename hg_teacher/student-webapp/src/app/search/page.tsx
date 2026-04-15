@@ -307,7 +307,7 @@ export default function SearchPage() {
           {/* Feed - Tile Grid Layout */}
           <div>
             {filtered.length > 0 ? (
-              <div className="grid grid-cols-3 gap-[1px] bg-[#EBEBEB]">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-[1px] bg-[#EBEBEB]">
                 {filtered.map((teacher, idx) => {
                   const isTall = idx % 7 === 0 || idx % 7 === 4;
                   const status = getAvailabilityStatus(teacher.availability);
@@ -316,7 +316,7 @@ export default function SearchPage() {
                   return (
                     <div
                       key={teacher.id}
-                      onClick={() => router.push(`/teachers/${teacher.id}`)}
+                      onClick={() => { window.location.href = "/teacher/profile/"; }}
                       className={`relative bg-white overflow-hidden cursor-pointer group ${
                         isTall ? 'row-span-2' : ''
                       }`}
@@ -352,14 +352,14 @@ export default function SearchPage() {
 
                         {/* Bottom Section - Teacher Info */}
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <h3 className="text-[12px] font-semibold text-white mb-0.5">{teacher.name}</h3>
-                          <div className="flex items-center gap-1 mb-0.5">
-                            <Star size={10} weight="fill" className="text-[#F97316]" />
-                            <span className="text-[10px] font-semibold text-white">{teacher.rating}</span>
-                            <span className="text-[9px] text-white/70">({teacher.reviews})</span>
+                          <h3 className="text-[15px] font-bold text-white mb-1">{teacher.name}</h3>
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <Star size={13} weight="fill" className="text-[#F97316]" />
+                            <span className="text-[13px] font-semibold text-white">{teacher.rating}</span>
+                            <span className="text-[11px] text-white/70">({teacher.reviews})</span>
                           </div>
-                          <p className="text-[9px] text-white/90 mb-0.5 truncate">{teacher.subjects.join(", ")}</p>
-                          <div className="flex items-center gap-1.5 text-[9px] text-white/70">
+                          <p className="text-[12px] text-white/90 mb-1 truncate">{teacher.subjects.join(", ")}</p>
+                          <div className="flex items-center gap-1.5 text-[11px] text-white/70">
                             <span>{teacher.experience}</span>
                             <span>•</span>
                             <span>{teacher.students} students</span>
@@ -383,7 +383,7 @@ export default function SearchPage() {
         </main>
 
         {/* Right Sidebar */}
-        <aside className="hidden lg:block w-[350px] px-5 py-4 bg-white">
+        <aside className="hidden xl:block w-[350px] px-5 py-4 bg-white">
           <div className="sticky top-0 space-y-4">
             {/* Popular Subjects */}
             <div className="bg-white rounded-[14px] overflow-hidden border border-[#EBEBEB]">

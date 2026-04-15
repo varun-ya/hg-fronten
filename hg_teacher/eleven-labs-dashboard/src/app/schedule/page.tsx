@@ -140,6 +140,7 @@ export default function SchedulePage() {
   const [rescheduleTime, setRescheduleTime] = useState({ hour: 9, minute: 0 });
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [showMonthPicker, setShowMonthPicker] = useState(false);
+  const [showDemoNotice, setShowDemoNotice] = useState(true);
   const [rescheduleDate, setRescheduleDate] = useState<Date | null>(null);
   const [rescheduleSlot, setRescheduleSlot] = useState<string | null>(null);
   const [rescheduleNote, setRescheduleNote] = useState("");
@@ -643,6 +644,30 @@ export default function SchedulePage() {
           </div>
         </div>
       </header>
+
+      {/* Demo Class Notice */}
+      {showDemoNotice && (
+      <div className="max-w-[1440px] mx-auto px-5 pt-4">
+        <div className="rounded-[12px] p-4 flex items-start gap-3" style={{ background: "#E8DEFF", border: "1px solid #D0BCFF" }}>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: "#FFFFFF" }}>
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256" style={{ color: "#7C4DFF" }}>
+              <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"></path>
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-[14px] font-semibold mb-1" style={{ color: "#22005D" }}>Free Demo Class — Compulsory</h3>
+            <p className="text-[13px] leading-relaxed" style={{ color: "#4A148C" }}>
+              For every teacher, <span className="font-semibold">1 demo class is free</span> and it is <span className="font-semibold">compulsory</span>. This helps new students experience your teaching style before enrolling in paid sessions.
+            </p>
+          </div>
+          <button onClick={() => setShowDemoNotice(false)} className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-none cursor-pointer transition-opacity hover:opacity-70" style={{ background: "rgba(124,77,255,0.15)" }}>
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 256 256" style={{ color: "#7C4DFF" }}>
+              <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      )}
 
       {/* Main Layout Area */}
       <div className="max-w-[1440px] mx-auto flex gap-6 px-5 py-6">

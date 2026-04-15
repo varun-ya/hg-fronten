@@ -15,7 +15,7 @@ export default function StatsCardsScroll() {
   const stats: StatCard[] = [
     {
       icon: Flame,
-      gradient: ["#4A90E2", "#5BA3F5"],
+      gradient: ["#FFE5E5", "#FFD4D4"],
       value: "7 days",
       label: "Streak",
       description: "Days in a row you've been learning",
@@ -23,7 +23,7 @@ export default function StatsCardsScroll() {
     },
     {
       icon: Star,
-      gradient: ["#E85060", "#F06B7A"],
+      gradient: ["#FFF4E5", "#FFE8CC"],
       value: "1240 XP",
       label: "XP Earned",
       description: "Points from classes & quizzes",
@@ -31,7 +31,7 @@ export default function StatsCardsScroll() {
     },
     {
       icon: BookOpen,
-      gradient: ["#8B5CF6", "#A78BFA"],
+      gradient: ["#E5F4FF", "#D4EBFF"],
       value: "4 done",
       label: "Classes",
       description: "Sessions completed so far",
@@ -39,7 +39,7 @@ export default function StatsCardsScroll() {
     },
     {
       icon: Hourglass,
-      gradient: ["#22C55E", "#4ADE80"],
+      gradient: ["#E5FFE5", "#D4FFD4"],
       value: "3.5 hrs",
       label: "Hours",
       description: "Total time spent this week",
@@ -62,7 +62,7 @@ export default function StatsCardsScroll() {
                 background: `linear-gradient(135deg, ${stat.gradient[0]} 0%, ${stat.gradient[1]} 100%)`,
               }}
             >
-              <stat.icon size={32} weight="fill" className="text-white" />
+              <stat.icon size={32} weight="fill" className="text-[#F97316]" />
             </div>
 
             {/* White Bottom Section (48% height) */}

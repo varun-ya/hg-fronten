@@ -86,11 +86,11 @@ function calculateActiveDays(): number {
 // Get color for activity level (0-4)
 function getColor(level: number): string {
   const colors = [
-    "#F0EEEB", // 0 - none
-    "#FFEDD5", // 1 - low
-    "#FFCF8A", // 2 - medium
-    "#E8A45C", // 3 - high
-    "#E08A3C", // 4 - very high
+    "#DCDEE3", // 0 - neutral (none)
+    "#C8E6C9", // 1 - greenContainer (low)
+    "#81C784", // 2 - mid green (medium)
+    "#43A047", // 3 - green (high)
+    "#2E7D32", // 4 - deep green (very high)
   ];
   return colors[Math.max(0, Math.min(4, level))];
 }
@@ -128,27 +128,28 @@ export default function StreakCalendar() {
   const monthLabels = getMonthLabels();
 
   return (
-    <div className="bg-white border border-[#EBEBEB] rounded-[14px] p-4">
+    <div className="rounded-[12px] p-4 overflow-hidden" style={{ background: "#FFFFFF" }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Flame size={15} weight="fill" className="text-[#E08A3C]" />
-          <span className="text-[13px] font-semibold text-[#111]">
+          <Flame size={15} weight="fill" style={{ color: "#B5651D" }} />
+          <span className="text-[13px] font-medium" style={{ color: "#1A1C1E" }}>
             {streak} day streak
           </span>
         </div>
-        <span className="text-[10px] text-[#AAA]">
+        <span className="text-[10px]" style={{ color: "#74777F" }}>
           {activeDays}/{DAYS} days
         </span>
       </div>
 
       {/* Month Labels */}
-      <div className="relative mb-1.5" style={{ marginLeft: "28px" }}>
+      <div className="overflow-x-auto">
+      <div className="relative mb-1.5" style={{ marginLeft: "28px", minWidth: "fit-content" }}>
         <div className="flex gap-[3px]">
           {Array.from({ length: weeks }).map((_, weekIndex) => {
             const label = monthLabels.find(l => l.weekIndex === weekIndex);
             return (
-              <div key={weekIndex} className="w-[11px] text-[9px] text-[#666] font-medium">
+              <div key={weekIndex} className="w-[11px] text-[9px] font-medium" style={{ color: "#44474E" }}>
                 {label ? label.month : ""}
               </div>
             );
@@ -157,7 +158,7 @@ export default function StreakCalendar() {
       </div>
 
       {/* Calendar Grid */}
-      <div className="flex gap-[3px]">
+      <div className="flex gap-[3px]" style={{ minWidth: "fit-content" }}>
         {/* Day labels */}
         <div className="flex flex-col gap-[3px] mr-1.5 w-[22px]">
           {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
@@ -166,7 +167,7 @@ export default function StreakCalendar() {
               className="h-[11px] flex items-center justify-end"
             >
               {index % 2 === 1 && (
-                <span className="text-[9px] text-[#888]">{day}</span>
+                <span className="text-[9px]" style={{ color: "#74777F" }}>{day}</span>
               )}
             </div>
           ))}
@@ -183,7 +184,7 @@ export default function StreakCalendar() {
                 return (
                   <div
                     key={dayIndex}
-                    className="w-[11px] h-[11px] rounded-[2px] cursor-pointer hover:ring-1 hover:ring-[#E08A3C] transition-all"
+                    className="w-[11px] h-[11px] rounded-[3px] cursor-pointer hover:ring-1 hover:ring-[#2E7D32] transition-all"
                     style={{
                       backgroundColor: getColor(level),
                     }}
@@ -195,10 +196,11 @@ export default function StreakCalendar() {
           ))}
         </div>
       </div>
+      </div>  {/* end overflow-x-auto */}
 
       {/* Legend */}
       <div className="flex items-center gap-1 mt-2.5 justify-end">
-        <span className="text-[9px] text-[#AAA]">Less</span>
+        <span className="text-[9px]" style={{ color: "#74777F" }}>Less</span>
         {[0, 1, 2, 3, 4].map((level) => (
           <div
             key={level}
@@ -206,7 +208,7 @@ export default function StreakCalendar() {
             style={{ backgroundColor: getColor(level) }}
           />
         ))}
-        <span className="text-[9px] text-[#AAA]">More</span>
+        <span className="text-[9px]" style={{ color: "#74777F" }}>More</span>
       </div>
     </div>
   );

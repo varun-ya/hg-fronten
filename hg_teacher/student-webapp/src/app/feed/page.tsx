@@ -159,7 +159,7 @@ export default function FeedPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-[1100px] mx-auto flex px-5 py-6 gap-6">
+      <div className="max-w-[1100px] mx-auto flex px-3 sm:px-5 py-4 sm:py-6 gap-4 sm:gap-6">
 
         {/* Main Feed */}
         <main className="flex-1 min-w-0">

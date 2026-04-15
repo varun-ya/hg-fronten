@@ -22,7 +22,7 @@ export default function AnimatedHoot({ size = 80, className = "" }: AnimatedHoot
     if (!ctx) return;
 
     const img = new Image();
-    img.src = "/hoot.png";
+    img.src = "/student/hoot.png";
     imgRef.current = img;
 
     // Sprite sheet dimensions (from mobile app analysis)
